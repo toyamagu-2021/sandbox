@@ -1,0 +1,58 @@
+repositories:
+  - name: autoscaler
+    url: https://kubernetes.github.io/autoscaler
+  - name: podinfo
+    url: https://stefanprodan.github.io/podinfo
+
+releases:
+  - name: cluster-autoscaler
+    namespace: kube-system
+    chart: autoscaler/cluster-autoscaler
+    version: 9.46.3 # Check for the latest version
+    values:
+      - rbac:
+          create: true
+          serviceAccount:
+            create: true
+            # annotations:
+            #   eks.amazonaws.com/role-arn: "arn:aws:iam::554774734961:role/cluster-autoscaler-20250320132048613700000001"  # Replace with your AWS account ID
+        autoDiscovery:
+          clusterName: ex-terraform-al2023  # Match your EKS cluster name from Terraform
+        awsRegion: ap-northeast-1  # Match your AWS region
+        cloudProvider: aws
+        replicaCount: 1
+        image:
+          tag: v1.31.2
+  - name: podinfo
+    namespace: default
+    chart: podinfo/podinfo
+    version: 6.8.0
+    values:
+      - replicaCount: 2
+        nodeSelector:
+          app: "true"
+        # resources:
+        #   limits:
+        #     cpu: 1000m
+        #     memory: 128Mi
+        #   requests:
+        #     cpu: 1000m
+        #     memory: 128Mi
+  - name: podinfo-pdb
+    namespace: default
+    chart: podinfo/podinfo
+    version: 6.8.0
+    values:
+      - replicaCount: 0
+        nodeSelector:
+          app: "true"
+        # resources:
+        #   limits:
+        #     cpu: 250m
+        #     memory: 128Mi
+        #   requests:
+        #     cpu: 250m
+        #     memory: 128Mi
+        podDisruptionBudget:
+          enabled: false
+          maxUnavailable: 0
