@@ -55,7 +55,36 @@ You can also set the port for the SSE server (default is 58082):
 
 ## Usage with Claude
 
-To use this MCP server with Claude, add it to your MCP settings configuration file:
+To use this MCP server with Claude, add it to your MCP settings configuration file.
+
+### Cline Configuration
+
+For the Cline VSCode extension, edit the MCP settings file at:
+`~/.vscode-server/data/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+
+#### Command-based Configuration (Recommended)
+
+```json
+{
+  "mcpServers": {
+    "argocd": {
+      "command": "node",
+      "args": ["/path/to/argocd-mcp-server/build/index.js"],
+      "env": {
+        "ARGOCD_SERVER_URL": "https://argocd.example.com",
+        "ARGOCD_TOKEN": "your-argocd-token",
+        "PORT": "58082"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+#### URL-based Configuration (Alternative)
+
+If you're running the server separately:
 
 ```json
 {
@@ -70,10 +99,14 @@ To use this MCP server with Claude, add it to your MCP settings configuration fi
 }
 ```
 
-### VSCode Extension
+### Claude Desktop Configuration
 
-For the Cline VSCode extension, edit the MCP settings file at:
-`~/.vscode-server/data/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+For the Claude desktop app, edit the configuration file at:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- Linux: `~/.config/Claude/claude_desktop_config.json`
+
+The format is the same as shown above.
 
 ## Example Usage
 
